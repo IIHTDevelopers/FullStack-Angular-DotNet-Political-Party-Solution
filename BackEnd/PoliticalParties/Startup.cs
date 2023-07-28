@@ -39,13 +39,12 @@ namespace PoliticalParties
             services.AddScoped<IPoliticalPartyServices, PoliticalPartyServices>();
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
+                options.AddDefaultPolicy(builder =>
+                {
+                  builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+                 });
             });
         }
 
@@ -62,9 +61,10 @@ namespace PoliticalParties
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            
             app.UseStaticFiles();
-
+            app.UseCors();
+            // app.UseHttpsRedirection();
             app.UseRouting();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -72,7 +72,6 @@ namespace PoliticalParties
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Test1 Api v1");
             });
             app.UseAuthorization();
-            app.UseCors("AllowAll");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
