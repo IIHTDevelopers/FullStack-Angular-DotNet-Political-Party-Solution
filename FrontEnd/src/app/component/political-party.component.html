@@ -1,0 +1,62 @@
+<h2>Political Parties</h2>
+
+<h2>Political Parties</h2>
+
+<form [formGroup]="partyForm">
+    <div>
+        <label>Name:</label>
+        <input type="text" formControlName="name">
+        <div *ngIf="partyForm.get('name')!.invalid && (partyForm.get('name')!.dirty || partyForm.get('name')!.touched)">
+            <div *ngIf="partyForm.get('name')!.hasError('required')">Name is required.</div>
+            <div *ngIf="partyForm.get('name')!.hasError('minlength')">Name must be at least 3 characters long.</div>
+            <div *ngIf="partyForm.get('name')!.hasError('maxlength')">Name cannot exceed 20 characters.</div>
+        </div>
+    </div>
+
+    <div>
+        <label>Founder:</label>
+        <input type="text" formControlName="founder">
+        <div
+            *ngIf="partyForm.get('founder')!.invalid && (partyForm.get('founder')!.dirty || partyForm.get('founder')!.touched)">
+            <div *ngIf="partyForm.get('founder')!.hasError('required')">Founder is required.</div>
+            <div *ngIf="partyForm.get('founder')!.hasError('minlength')">Founder must be at least 5 characters long.
+            </div>
+            <div *ngIf="partyForm.get('founder')!.hasError('maxlength')">Founder cannot exceed 200 characters.</div>
+        </div>
+    </div>
+
+    <div>
+        <label>Is Deleted:</label>
+        <input type="checkbox" formControlName="isDeleted">
+    </div>
+
+    <button type="button" (click)="createParty()" [disabled]="!partyForm.valid">Create Party</button>
+</form>
+
+<!-- Rest of the code remains the same -->
+
+
+<hr>
+
+<h3>Search Parties</h3>
+
+<div>
+    <label>Search by Name:</label>
+    <input type="text" (input)="searchByName($event)">
+</div>
+
+<div>
+    <label>Search by Founder:</label>
+    <input type="text" (input)="searchByFounder($event)">
+</div>
+
+<hr>
+
+<h3>Political Parties List</h3>
+<ul>
+    <li *ngFor="let party of parties">
+        {{ party.name }} - {{ party.founder }}
+        <button (click)="editParty(party)">Edit</button>
+        <button (click)="deleteParty(party.politicalPartyId)">Delete</button>
+    </li>
+</ul>
