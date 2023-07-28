@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +30,7 @@ namespace PoliticalParties.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("parties")]
+        [EnableCors("AllowAll")]
         public async Task<IActionResult> Register([FromBody] RegisterPoliticalPartyViewModel model)
         {
             var politicalPartyExists = await _politicalPartyServices.GetById(model.PoliticalPartyId);
@@ -57,6 +58,7 @@ namespace PoliticalParties.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("parties/{id}")]
+        [EnableCors("AllowAll")]
         public async Task<IActionResult> UpdatePoliticalParty(long id,[FromBody] RegisterPoliticalPartyViewModel model)
         {
             var politicalParty = await _politicalPartyServices.GetById(id);
@@ -81,6 +83,7 @@ namespace PoliticalParties.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Route("parties/{id}")]
+        [EnableCors("AllowAll")]
         public async Task<IActionResult> DeletePoliticalParty(long id)
         {
             var politicalParty = await _politicalPartyServices.GetById(id);
@@ -108,6 +111,7 @@ namespace PoliticalParties.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("parties/{id}")]
+        [EnableCors("AllowAll")]
         public async Task<IActionResult> GetPoliticalPartyById(long id)
         {
             var politicalParty = await _politicalPartyServices.GetById(id);
@@ -129,17 +133,18 @@ namespace PoliticalParties.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("parties/searchParty")]
-        public async Task<IEnumerable<PoliticalParty>> GetPoliticalPartyByName([FromQuery] string name)
+        [EnableCors("AllowAll")]
+        public async Task<IActionResult> GetPoliticalPartyByName([FromQuery] string name)
         {
             var politicalParty = await _politicalPartyServices.GetByPartyName(name);
             if (politicalParty == null)
             {
-                return (IEnumerable<PoliticalParty>)StatusCode(StatusCodes.Status500InternalServerError, new Response
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response
                 { Status = "Error", Message = $"Political Party With Name = {name} cannot be found" });
             }
             else
             {
-                return (IEnumerable<PoliticalParty>)(politicalParty);
+                return Ok(politicalParty);
             }
         }
 
@@ -150,17 +155,18 @@ namespace PoliticalParties.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("parties/search")]
-        public async Task<IEnumerable<PoliticalParty>> GetPoliticalPartyByFounderName([FromQuery] string founderName)
+        [EnableCors("AllowAll")]
+        public async Task<IActionResult> GetPoliticalPartyByFounderName([FromQuery] string founderName)
         {
             var politicalParty = await _politicalPartyServices.GetByFounderName(founderName);
             if (politicalParty == null)
             {
-                return (IEnumerable<PoliticalParty>)StatusCode(StatusCodes.Status500InternalServerError, new Response
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response
                 { Status = "Error", Message = $"Political Party With Founder Name = {founderName} cannot be found" });
             }
             else
             {
-                return (IEnumerable<PoliticalParty>)(politicalParty);
+                return Ok(politicalParty);
             }
         }
 
@@ -170,6 +176,7 @@ namespace PoliticalParties.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("parties")]
+        [EnableCors("AllowAll")]
         public async Task<IEnumerable<PoliticalParty>> ListAllPoliticalParties()
         {
             return await _politicalPartyServices.GetAll();
